@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Bots
+﻿namespace Bots
 {
     public class Keyboard
     {
@@ -9,7 +6,7 @@ namespace Bots
 
         public Keyboard(params string[] buttonsNames)
         {
-            _buttonsNames = buttonsNames.ToList();
+            _buttonsNames = new List<string>(buttonsNames);
         }
     }
 }

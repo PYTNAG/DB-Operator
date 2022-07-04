@@ -2,7 +2,7 @@
 {
     public interface IUpdateHandler
     {
-        public Task InvokeMessageAsync(long chatId, string message);
+        public void InvokeMessageAsync(long chatId, string message);
 
         public void AddResponse(Response response);
 

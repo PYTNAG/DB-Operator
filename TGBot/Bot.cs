@@ -8,7 +8,7 @@ namespace Bots.TG
 {
     public class Bot : IBot
     {
-        public readonly TelegramBotClient BotClient;
+        private readonly TelegramBotClient _botClient;
         private readonly CancellationTokenSource _cancellationToken;
 
         public Data Data { get; }
@@ -18,7 +18,7 @@ namespace Bots.TG
         public Bot(string token, IUpdateHandler updateHandler, Data data)
         {
             Data = data;
-            BotClient = new TelegramBotClient(token);
+            _botClient = new TelegramBotClient(token);
             _cancellationToken = new CancellationTokenSource();
             _updateHandler = updateHandler;
         }
@@ -32,7 +32,7 @@ namespace Bots.TG
             if (keyboard is not Keyboard && keyboard != null)
                 throw new Exception("Not-TG keyboard using for TG bot");
 
-            await BotClient.SendTextMessageAsync(
+            await _botClient.SendTextMessageAsync(
                         chatId: chatId,
                         text: text,
                         replyMarkup: (keyboard as Keyboard)?.GetVerticalReplyMarkup() ?? Keyboard.RemoveMarkup
@@ -46,12 +46,12 @@ namespace Bots.TG
             if (st.FileId == null)
                 throw new Exception("Null file id for sticker");
 
-            return BotClient.SendStickerAsync(chatId, st.FileId);
+            return _botClient.SendStickerAsync(chatId, st.FileId);
         }
 
         public void StartReceiving()
         {
-            BotClient.StartReceiving(
+            _botClient.StartReceiving(
                 (UpdateHandlers.UpdateHandler)_updateHandler,
                 new Telegram.Bot.Extensions.Polling.ReceiverOptions { AllowedUpdates = { } },
                 _cancellationToken.Token
@@ -63,9 +63,9 @@ namespace Bots.TG
             _cancellationToken.Cancel();
         }
 
-        public async void InvokeMessageAsync(long userId, string mes)
+        public void InvokeMessageAsync(long userId, string mes)
         {
-            await _updateHandler.InvokeMessageAsync(userId, mes);
+            _updateHandler.InvokeMessageAsync(userId, mes);
         }
 
         public void AddResponse(Func<InputMessage, bool> filter, Action<InputMessage> response)

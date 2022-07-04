@@ -72,7 +72,7 @@ namespace Bots.TG.UpdateHandlers
             }
         }
 
-        public async Task InvokeMessageAsync(long chatId, string message)
+        public async void InvokeMessageAsync(long chatId, string message)
         {
             InputMessage im = new()
             {
